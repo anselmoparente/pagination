@@ -1,6 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs 1.3
 
 Window {
     width: 1280
@@ -66,6 +67,9 @@ Window {
             icon.cache: true
             icon.color: "#ddff0000"
             icon.width: 48
+            onClicked: {
+                fileDialog.open()
+            }
         }
 
         Text {
@@ -117,5 +121,26 @@ Window {
                 font.pixelSize: 24
             }
         }
+        FileDialog {
+                id: fileDialog
+                title: "Escolha um arquivo"
+                folder: shortcuts.home
+                selectFolder: false
+
+                onAccepted: {
+                    console.log("Arquivo selecionado:", fileDialog.fileUrls)
+                    // Faça algo com o arquivo selecionado
+                }
+
+                onRejected: {
+                    console.log("Seleção de arquivo cancelada")
+                }
+            }
     }
+
+
+
+    Connections{
+            target: backend
+        }
 }
