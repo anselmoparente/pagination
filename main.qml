@@ -23,43 +23,55 @@ Window {
             color: "#ffffff"
 
             RadioButton {
-                id: radioButton
-                x: 76
+                id: radioButtonFIFO
+                x: 75
                 y: 75
                 height: 50
                 text: qsTr("FIFO")
+                onClicked: {
+                    backend.changeOption(0)
+                }
             }
 
             RadioButton {
-                id: radioButton1
+                id: radioButtonSC
                 x: 250
                 y: 75
                 height: 50
                 text: qsTr("SEGUNDA CHANCE")
+                onClicked: {
+                    backend.changeOption(1)
+                }
             }
 
             RadioButton {
-                id: radioButton2
+                id: radioButtonNUR
                 x: 500
                 y: 75
                 height: 50
                 text: qsTr("NUR")
+                onClicked: {
+                    backend.changeOption(2)
+                }
             }
 
             RadioButton {
-                id: radioButton3
-                x: 661
+                id: radioButtonMUR
+                x: 660
                 y: 75
                 height: 50
                 text: qsTr("MUR")
+                onClicked: {
+                    backend.changeOption(3)
+                }
             }
         }
 
         Button {
-            id: button
-            x: 831
-            y: 77
-            text: qsTr("Escolha o arquivo")
+            id: buttonFile
+            x: 830
+            y: 132
+            text: qsTr("Escolher arquivo")
             checked: false
             display: AbstractButton.TextOnly
             checkable: false
@@ -72,13 +84,30 @@ Window {
             }
         }
 
+        Button {
+            id: buttonRun
+            x: 1030
+            y: 132
+            text: qsTr("Rodar")
+            checked: false
+            display: AbstractButton.TextOnly
+            checkable: false
+            flat: false
+            icon.cache: true
+            icon.color: "#ddff0000"
+            icon.width: 48
+            onClicked: {
+                backend.run()
+            }
+        }
+
         Text {
-            id: text1
+            id: textFile
             x: 831
-            y: 140
+            y: 186
             color: "#5c2727"
-            text: qsTr("Nome do arquivo carregado")
-            font.pixelSize: 24
+            text: 'Escolha um arquivo'
+            font.pixelSize: 18
         }
 
         Rectangle {
@@ -121,15 +150,42 @@ Window {
                 font.pixelSize: 24
             }
         }
+
+        TextField {
+            id: textFieldFrames
+            x: 830
+            y: 27
+            placeholderText: qsTr("Frames")
+            onEditingFinished: {
+                if (!isNaN(parseFloat(textFieldFrames.text)) && isFinite(textFieldFrames.text)) {
+                     backend.changeFrames(textFieldFrames.text)
+                }
+            }
+        }
+
+        TextField {
+            id: textFieldReference
+            x: 830
+            y: 80
+            placeholderText: qsTr("Referências")
+            onEditingFinished: {
+                if (!isNaN(parseFloat(textFieldReference.text)) && isFinite(textFieldReference.text)) {
+                    backend.changeReferences(textFieldReference.text)
+                }
+            }
+        }
+
         FileDialog {
                 id: fileDialog
                 title: "Escolha um arquivo"
                 folder: shortcuts.home
                 selectFolder: false
+                selectExisting: true
+                nameFilters: ["Text files (*.txt)"]
 
-                onAccepted: {
-                    console.log("Arquivo selecionado:", fileDialog.fileUrls)
-                    // Faça algo com o arquivo selecionado
+                onAccepted: { 
+                    textFile.text = 'Arquivo escolhido'
+                    backend.changeFileName(fileDialog.fileUrls)
                 }
 
                 onRejected: {
